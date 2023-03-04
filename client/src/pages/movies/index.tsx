@@ -12,7 +12,7 @@ interface Promps {
     Movie: Movie;
 }
 
-const API_CALL = "http://localhost:3001/api/movies"
+// const API_CALL = "http://localhost:3001/api/movies"
 
 const Movies: FC<Promps> = () => {
 const {movies, error, isLoading} =useFetch()

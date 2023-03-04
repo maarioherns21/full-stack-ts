@@ -1,10 +1,12 @@
 
 
+
 export interface Movie {
-  name: String;
-  creator: String;
-  body: String;
-  image?: String;
-  comment?: String;
-  likes?: String;
-}
+    name: string;
+    body: string;
+    creator?: any;
+    image?: string;
+    _id?: any;
+    comment?: String;
+    likes?: String;
+  }
