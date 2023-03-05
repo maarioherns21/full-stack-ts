@@ -4,7 +4,7 @@ import { Movie } from "../Model/Model"
 import  FileBase from "react-file-base64"
 import styles from '@/styles/Home.module.css'
 
-const POST: string = "POST"
+const PATCH: string = "PATCH"
 const API_FORM: string = "http://localhost:3001/api/movies/"
 
 
@@ -17,15 +17,16 @@ const EditForm:FC<Promps> = ({movie}) => {
     const [error, setError] =useState<any>([])
     const [isPending, setIsPending] =useState<boolean>(false) 
     const navigate: NextRouter = useRouter()
-    const params =  navigate.query.movieid
-    
+    const movieId: any = navigate.query.movieid;
+  
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try {
         const movie = { ...formData };
         setIsPending(true)
-        const res: Response = await fetch(`${API_FORM}${params}`, {
-          method: POST,
+        const res = await fetch(`http://localhost:3001/api/movies/${movieId}`, {
+          method: PATCH,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(movie),
         });

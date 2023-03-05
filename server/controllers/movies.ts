@@ -35,7 +35,7 @@ export const createMovie: Params = async (req , res) => {
 
 export const deleteMovie: Params = async (req, res) => {
     try {
-    const {id} = req.Params
+    const {id} = req.params
 
     const data = await Tapes.findByIdAndDelete(id)
 
@@ -51,7 +51,7 @@ export const deleteMovie: Params = async (req, res) => {
 export const updateMovie: Params = async (req, res) => {
     try {
         const movie = req.body
-        const { id } = req.Params
+        const { id } = req.params
         const newData: any = { ...movie, _id: id }
 
         const data = await Tapes.findByIdAndUpdate(id, newData, { new: true })
@@ -68,7 +68,7 @@ export const updateMovie: Params = async (req, res) => {
 export const likeMovie: Params = async (req, res) => {
     try {
         const { like } = req.body
-        const { id } = req.body
+        const { id } = req.params
 
         const movie: any = await Tapes.findById(id)
 
@@ -88,7 +88,7 @@ export const likeMovie: Params = async (req, res) => {
 export const commentMovie: Params = async (req, res) => {
     try {
         const { comment } = req.body
-        const { id } = req.Params
+        const { id } = req.params
         const movie: any = await Tapes.findById(id)
 
         movie.comments.push(comment)
