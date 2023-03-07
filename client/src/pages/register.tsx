@@ -7,7 +7,7 @@ import Layout from "../../layout/layout";
 import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi";
 import { useFormik } from "formik";
 import { registerValidate } from "../../lib/validate";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 
 interface Promps {
     password: boolean;
@@ -22,9 +22,9 @@ interface Promp {
 }
 
 const Register: FC = () => {
-  const router = useRouter()
-    const [show, setShow] = useState({ password: false, cpassword: false })
-    const formik = useFormik({
+  const router: NextRouter = useRouter()
+    const [show, setShow] = useState<Promps>({ password: false, cpassword: false })
+    const formik = useFormik<Promp>({
         initialValues: {
             username : '',
             email: '',
@@ -35,18 +35,18 @@ const Register: FC = () => {
         onSubmit
     })
 
-    async function onSubmit(values: any){
-        const options = {
-            method: "POST",
-            headers : { 'Content-Type': 'application/json'},
-            body: JSON.stringify(values)
-        }
-
-        await fetch('http://localhost:3000/api/auth/signup', options)
-            .then(res => res.json())
-            .then((data) => {
-                if(data) router.push('http://localhost:3000')
-            })
+    async function onSubmit(values: any) {
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+        const data = await res.json();
+        if (data) router.push("/");
+      } catch (error: any) {
+        console.log(error.message);
+      }
     }
 
     return (
