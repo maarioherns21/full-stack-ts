@@ -3,14 +3,16 @@ import { FC, useState } from "react"
 import FileBase from "react-file-base64"
 import styles from '@/styles/Home.module.css'
 import { NextRouter, useRouter } from "next/router"
-
+import { useSession } from "next-auth/react"
 
 const POST: string = "POST"
 const API_FORM: string = "http://localhost:3001/api/movies/add"
 
 
 const Form:FC= () => {
-const [formData, setFormData]=useState<Movie>({ name: "" , creator: "", body: "", image: ""})
+const {data: session}: any =useSession()
+console.log(session)
+const [formData, setFormData]=useState<Movie>({ name: "" , creator: "" , body: "", image: ""})
 const [error, setError] =useState<any>([])
 const [isPending, setIsPending] =useState<boolean>(false) 
 const navigate: NextRouter = useRouter()

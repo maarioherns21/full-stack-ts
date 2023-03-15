@@ -1,9 +1,11 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from 'next-auth/providers/credentials';
+import connectMongo from '../../../../database/conn'
+import Users from "../../../../model/user"
+import { compare } from 'bcryptjs';
 
-// const CLIENT_ID = "162420244181-kko3h7tvomskdt4ok267cnmcs27cijk9.apps.googleusercontent.com"
-// const CLIENT_SECRET = "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"
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -16,7 +18,34 @@ export const authOptions = {
       clientId: process.env.CLIENT_ID_GIT,
       clientSecret: process.env.CLIENT_SECRET_GIT,
     }),
+    CredentialsProvider({
+      name : "Credentials",
+      async authorize(credentials, req){
+          connectMongo().catch( error => { error: "Connection Failed...!"})
+
+          // check user existance
+          const result = await Users.findOne( { email : credentials.email})
+          if(!result){
+              throw new Error("No user Found with Email Please Sign Up...!")
+          }
+
+          // compare()
+          const checkPassword = await compare(credentials.password, result.password);
+          
+          // incorrect password
+          if(!checkPassword || result.email !== credentials.email){
+              throw new Error("Username or Password doesn't match");
+          }
+          return result;
+
+      }
+  })
+    
     // ...add more providers here
   ],
+  secret: process.env.CLIENT_ID_JWT_SECRET,
+  session: {
+      strategy: 'jwt',
+  }
 };
 export default NextAuth(authOptions);

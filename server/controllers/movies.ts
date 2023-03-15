@@ -21,10 +21,11 @@ export const createMovie: Params = async (req , res) => {
     try {
         const movie = req.body
 
-        const data = await Tapes.create({ ...movie })
-
-
-        res.status(200).json(data)
+        const data = new Tapes({ ...movie })
+          console.log(movie)
+        const saveMovie = await data.save()
+         
+        res.status(200).json(saveMovie)
     } catch (error: any) {
         console.log(error.message)
 

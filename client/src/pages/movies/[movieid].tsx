@@ -6,6 +6,7 @@ import { NextRouter, useRouter } from "next/router";
 import { FC, useState } from "react";
 import Popup from "reactjs-popup";
 import styles from '@/styles/Home.module.css'
+import { useSession } from "next-auth/react";
 
 interface Promp {
   like: string;
@@ -15,13 +16,15 @@ interface Promp {
 type Function = () => void;
 
 const DetailPage: Function = () => {
+  const {data: session} =useSession()
   const router: NextRouter = useRouter();
   const movieId: string | string[] | undefined = router.query.movieid;
   const { movies, error, isLoading } = useFetch();
   const movie: Movie | undefined = movies.find( (movie) => movie._id === movieId );
   const load: string = "Loading..";
  const [formData, setFormData]=useState<Promp>({ like:"", comment: ""})
-
+ const id =  router
+console.log(id, movieId)
   const handleDelete: () => Promise<void> = async () => {
     try {
       const res: Response = await fetch( `http://localhost:3001/api/movies/${movieId}`, { method: "DELETE" });
@@ -33,15 +36,21 @@ const DetailPage: Function = () => {
     }
   };
 
+  
 
  const handleLike : () => Promise<void> =  async () => {
     try {
     const like = { like: formData.like }
-    const res: Response = await fetch(`http://localhost:3001/api/movies/${movieId}/likes` , {
+    const token: any  = localStorage.getItem("token")
+    const user: any = JSON.parse(token)
+    const  res: Response = await fetch(
+      `http://localhost:3001/api/movies/${movieId}/likes`,
+      {
         method: "POST",
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify(like)
-    })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(like),
+      }
+    );
     const data: any = await res.json();
     console.log(data)
         
@@ -49,8 +58,6 @@ const DetailPage: Function = () => {
         console.log(error);
     }
   }
-
-
 
   const handleComment: () => Promise<void> = async () => {
     try {

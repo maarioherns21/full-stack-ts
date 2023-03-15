@@ -18,7 +18,7 @@ const useFetch = () => {
 
   const fetchData: () => Promise<void> = async () => {
     try {
-      const res = await fetch(API_CALL);
+      const res = await fetch("http://localhost:3001/api/movies");
       const data = await res.json();
       console.log(data);
       setError(null);
